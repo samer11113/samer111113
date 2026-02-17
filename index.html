@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الصيانة الوقائية لسيارة المدير Toyota Land Cruiser Prado 2025</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- تم إزالة زر تبديل السمة بناءً على طلب المستخدم -->
+
+    <!-- الهيدر -->
+    <header class="header">
+        <div class="container">
+            <button id="notificationsBtn" class="btn btn-warning notifications-btn header-notification-btn" onclick="app.showAllNotifications()" title="عرض جميع الإشعارات">
+                <i class="fas fa-bell"></i> 
+                <span class="btn-text">الإشعارات</span>
+                <span id="notificationBadge" class="notification-badge" style="display: none;">!</span>
+            </button>
+            <div class="department-title">
+                <!-- الصورة العلوية -->
+                <div class="top-logo-container">
+                    <img src="1111.png" alt="الشعار الرسمي" class="top-logo" />
+                </div>
+                
+                <!-- التخطيط الجديد مع صورة السيارة على اليسار -->
+                <div class="header-layout">
+                    <!-- صورة السيارة على اليسار -->
+                    <div class="car-image-left">
+                        <img src="123.png" alt="أيقونة السيارة" class="car-logo" />
+                    </div>
+                    
+                    <!-- النصوص في الوسط -->
+                    <div class="text-content">
+                        <h2>مديرية الدائرة المالية</h2>
+                        <div class="maintenance-title">
+                            <span class="main-title">الصيانة الوقائية لسيارة المدير</span>
+                            <span class="sub-title">Toyota Land Cruiser Prado 2025</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-controls">
+                <div class="control-group">
+                    <label for="currentKm">العداد الحالي (كم):</label>
+                    <input type="number" id="currentKm" placeholder="أدخل العداد الحالي" min="0">
+                </div>
+                <div class="control-group">
+                    <label for="currentDate">التاريخ الحالي:</label>
+                    <input type="date" id="currentDate" class="english-numbers">
+                </div>
+                <div class="control-group">
+                    <label for="purchaseDate">تاريخ شراء السيارة (ثابت):</label>
+                    <div class="input-with-button">
+                        <input type="date" id="purchaseDate" class="english-numbers" readonly value="2025-05-18" title="تاريخ شراء السيارة - نقطة مرجعية ثابتة لحساب جميع فترات الصيانة">
+                        <button id="contractNotesBtn" class="btn btn-info contract-notes-btn" title="مدة العقد المجاني">
+                            <i class="fas fa-file-contract"></i> مدة العقد المجاني
+                        </button>
+                        <button id="saveSettings" class="btn btn-primary save-settings-btn">
+                            <i class="fas fa-save"></i> حفظ
+                        </button>
+                    </div>
+                </div>
+                <button id="backupBtn" class="btn btn-success backup-btn" onclick="window.open('backup-manager-ui.html', '_blank')" title="إدارة النسخ الاحتياطية الشاملة">
+                    <i class="fas fa-shield-alt"></i> 
+                    <span class="btn-text">النسخ الاحتياطية</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+        <div class="container">
+            <!-- التبويبات -->
+            <div class="tabs-container">
+                <div class="tabs-nav" id="tabsNav">
+                    <button class="tab-btn active" data-tab="dashboard">
+                        <i class="fas fa-tachometer-alt"></i> لوحة التحكم
+                    </button>
+                    <button class="tab-btn" data-tab="all">
+                        <i class="fas fa-list"></i> جميع البنود
+                    </button>
+                </div>
+            </div>
+
+            <!-- محتوى التبويبات -->
+            <div class="tab-content">
+                <!-- لوحة التحكم -->
+                <div id="dashboard" class="tab-panel active">
+                    <div class="dashboard-cards">
+                        <div class="card status-card due">
+                            <div class="card-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3 id="dueCount">0</h3>
+                                <p>مستحق الآن</p>
+                            </div>
+                        </div>
+                        <div class="card status-card soon">
+                            <div class="card-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3 id="soonCount">0</h3>
+                                <p>قريب الاستحقاق</p>
+                            </div>
+                        </div>
+                        <div class="card status-card ok">
+                            <div class="card-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3 id="okCount">0</h3>
+                                <p>في حالة جيدة</p>
+                            </div>
+                        </div>
+                        <div class="card status-card info">
+                            <div class="card-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3 id="carAge">-</h3>
+                                <p>عمر السيارة</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="upcoming-services">
+                        <h2><i class="fas fa-calendar-alt"></i> أقرب 5 بنود للاستحقاق</h2>
+                        <div id="upcomingList" class="services-list">
+                            <!-- سيتم ملؤها بـ JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- جميع البنود -->
+                <div id="all" class="tab-panel">
+                    <div class="controls-bar">
+                        <div class="search-filter">
+                            <input type="text" id="searchInput" placeholder="البحث في البنود...">
+                            <select id="statusFilter">
+                                <option value="all">جميع الحالات</option>
+                                <option value="due">مستحق الآن</option>
+                                <option value="soon">قريب الاستحقاق</option>
+                                <option value="ok">في حالة جيدة</option>
+                            </select>
+                        </div>
+                        <div class="action-buttons">
+                            <button id="exportPDF" class="btn btn-danger">
+                                <i class="fas fa-file-pdf"></i> التقارير
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="allServicesList" class="all-services-table">
+                        <!-- سيتم ملؤها بـ JavaScript -->
+                    </div>
+                </div>
+
+                <!-- تبويبات البنود الفردية -->
+                <div id="individualTabs" class="individual-tabs">
+                    <!-- سيتم إنشاؤها ديناميكياً -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- مودال تسجيل الصيانة -->
+    <div id="serviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">تسجيل صيانة</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="serviceForm">
+                    <div class="form-group">
+                        <label for="serviceKm">عداد الكيلومترات:</label>
+                        <input type="number" id="serviceKm" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDate">تاريخ الصيانة:</label>
+                        <input type="date" id="serviceDate" class="english-numbers" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceNotes">ملاحظات:</label>
+                        <textarea id="serviceNotes" rows="3" placeholder="أضف ملاحظات (اختياري)"></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">حفظ</button>
+                        <button type="button" class="btn btn-secondary modal-close">إلغاء</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        <!-- مودال إضافة/تعديل بند في تبويب أخرى -->
+        <div id="otherModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="otherModalTitle">إضافة بند آخر</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="otherForm">
+                        <div class="form-group">
+                            <label for="otherType">نوع الصيانة:</label>
+                            <input type="text" id="otherType" required placeholder="مثال: فحص البطارية">
+                        </div>
+                        <div class="form-group">
+                            <label for="otherDate">التاريخ:</label>
+                            <input type="date" id="otherDate" class="english-numbers" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="otherDriver">اسم السائق:</label>
+                            <input type="text" id="otherDriver" placeholder="اسم السائق (اختياري)">
+                        </div>
+                        <input type="hidden" id="otherIndex" value="-1">
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">حفظ</button>
+                            <button type="button" class="btn btn-secondary modal-close">إلغاء</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    <!-- مودال تأكيد إعادة التعيين -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>تأكيد العملية</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من إعادة تعيين جميع البيانات؟ لا يمكن التراجع عن هذه العملية.</p>
+                <div class="form-actions">
+                    <button id="confirmReset" class="btn btn-danger">نعم، إعادة تعيين</button>
+                    <button class="btn btn-secondary modal-close">إلغاء</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال ملاحظات مدة العقد -->
+    <div id="contractNotesModal" class="modal">
+        <div class="modal-content contract-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-contract"></i> مدة العقد المجاني</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="contract-info">
+                    <div class="contract-section">
+                        <h4><i class="fas fa-shield-alt"></i> الصيانة الوقائية المجانية</h4>
+                        <div class="contract-details">
+                            <div class="contract-item">
+                                <i class="fas fa-road"></i>
+                                <span class="contract-label">المسافة المحددة:</span>
+                                <span class="contract-value">200,000 كم</span>
+                            </div>
+                            <div class="contract-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="contract-label">المدة المحددة:</span>
+                                <span class="contract-value">5 سنوات</span>
+                            </div>
+                            <div class="contract-item important">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span class="contract-label">شرط الانتهاء:</span>
+                                <span class="contract-value">أيهما أقرب</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contract-section">
+                        <h4><i class="fas fa-info-circle"></i> الحالة الحالية</h4>
+                        <div class="contract-status">
+                            <div class="status-item">
+                                <span class="status-label">المسافة المقطوعة:</span>
+                                <span id="currentKmStatus" class="status-value">-- كم</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">المسافة المتبقية:</span>
+                                <span id="remainingKmStatus" class="status-value">-- كم</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">المدة المنقضية:</span>
+                                <span id="elapsedTimeStatus" class="status-value">-- سنة</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="status-label">المدة المتبقية:</span>
+                                <span id="remainingTimeStatus" class="status-value">-- سنة</span>
+                            </div>
+                            <div class="status-item warranty-status">
+                                <span class="status-label">حالة الضمان:</span>
+                                <span id="warrantyStatus" class="status-value">--</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contract-section">
+                        <h4><i class="fas fa-lightbulb"></i> ملاحظات مهمة</h4>
+                        <ul class="contract-notes">
+                            <li><i class="fas fa-check"></i> الصيانة الوقائية مجانية خلال فترة الضمان</li>
+                            <li><i class="fas fa-check"></i> يجب الالتزام بمواعيد الصيانة المحددة</li>
+                            <li><i class="fas fa-check"></i> استخدام قطع غيار أصلية فقط</li>
+                            <li><i class="fas fa-exclamation-triangle"></i> انتهاء الضمان عند الوصول لأي من الحدين</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال الإشعارات -->
+    <div id="notificationsModal" class="notifications-modal">
+        <div class="notifications-modal-content">
+            <div class="notifications-modal-header">
+                <h3 id="notificationsModalTitle">🔔 إشعارات الصيانة</h3>
+                <button class="notifications-modal-close" onclick="app.closeNotificationsModal()">&times;</button>
+            </div>
+            <div class="notifications-modal-body">
+                <div id="notificationsModalContent">
+                    <!-- سيتم ملؤها بـ JavaScript -->
+                </div>
+            </div>
+            <div class="notifications-modal-footer">
+                <p class="notifications-modal-note">💡 تذكير: الإشعارات تظهر قبل 500 كم أو شهر من موعد الصيانة</p>
+                <p class="notifications-modal-tip">🔧 انقر على أي بند في القائمة لتسجيل الصيانة</p>
+                <button class="btn btn-secondary" onclick="app.closeNotificationsModal()">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال تأكيد تسجيل الخروج -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content logout-modal-simple">
+            <div class="simple-logout-content">
+                <p>هل تريد تسجيل الخروج؟</p>
+                <div class="simple-buttons">
+                    <button id="confirmLogout" class="simple-btn confirm-btn">نعم</button>
+                    <button class="simple-btn cancel-btn" onclick="closeLogoutModal()">لا</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تحميل المكتبات -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- سكريبتات التطبيق -->
+    <script src="database-client.js"></script>
+    <script src="data-persistence-system.js"></script>
+    <script src="data-persistence-test.js"></script>
+    <script src="script.js"></script>
+    <script src="app.js"></script>
+    <script src="backup-manager.js"></script>
+</body>
+</html>
